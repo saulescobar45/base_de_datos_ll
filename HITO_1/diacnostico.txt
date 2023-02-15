@@ -1,0 +1,6 @@
+que es una base de datos relacional
+R:Una base de datos relacional es un tipo de base de datos que utiliza un modelo de datos relacional para organizar y almacenar los datos. El modelo relacional se basa en la teoría de conjuntos y utiliza tablas, filas y columnas para representar los datos
+Que es DML
+R:Es la manipulacion de da datos y es un conjunto de SQL El DML se utiliza para realizar acciones como insertar, actualizar, borrar y recuperar datos de una base de datos. Estas operaciones permiten a los usuarios agregar, modificar y eliminar registros de datos en una base de datos relacional
+Que es DDL
+R:DDL significa Lenguaje de Definición de Datos utilizado para crear, modificar y eliminar estructuras de base de datos y sus objetos El DDL se utiliza para definir la estructura y el esquema de una base de datos relacional, incluyendo la creación, modificación y eliminación de tablas, índices, restricciones, vistas, procedimientos almacenados y otros objetos de base de datos.
