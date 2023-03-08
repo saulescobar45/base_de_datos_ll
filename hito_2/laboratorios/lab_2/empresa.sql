@@ -45,9 +45,11 @@ select * from empleado;
 select * from area;
 select * from empresa;
 
-select *
-from empleado  as emp
-where emp.nombre_empleado = 
+select emp.nombre_de_empresa,ar.nombre_del_area
+from empleado as em
+inner join empresa as e on em.id_empleado = em.id_empleado
+inner join  area as ar on ar.id_trabajo = ar.id_trabajo
+where em.nombre =  'david';
 
 
 
