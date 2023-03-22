@@ -97,3 +97,167 @@ INSERT INTO libro_categoria (libro_id, categoria_id) VALUES
 alter table libro add column paginas int default 20;
 
 alter table libro add column editorial varchar(50) default 'Don Bosco';
+
+SELECT * FROM libro;
+select * from autor;
+
+# mostrar todos los libros de los autores de nacionalidad argentino
+create view libro_argetino as
+select aut.nacionalidad,lib.titulo
+from autor as aut
+inner join libro lib on aut.id = lib.autor_id
+where aut.nacionalidad= 'Argentino';
+# mostrar los ibros de la categoria ciencia ficcion
+
+create view libros_ciencia_ficcion as
+select lib.titulo as libro,cat.nombre as categoria
+from libro_categoria as lc
+inner join libro as lib on lc.libro_id=lib.id
+inner join categoria as cat on lc.categoria_id = cat.id
+where cat.nombre = 'ciencia ficcion';
+
+create view paginas_de_los_libros as
+select lib.titulo as litleBook,
+       lib.editorial editorialBook,
+       lib.paginas pagesBook,
+        (
+        case
+        when lib.paginas> 10 and lib.paginas <= 30 then 'contenido basico'
+        when lib.paginas > 30 and lib.paginas <= 80 then 'contenido mediano'
+        when lib.paginas > 80 and lib.paginas <= 150 then 'contenido superior'
+        else 'contenido avanzado'
+        end
+        ) as contentBook
+from libro as lib;
+# de acuerdo a la vista creada
+# contar cuantos libros son de contenido medio
+
+ select *
+     from paginas_de_los_libros where contentBook = 'contenido medio';
+
+# creando una vista con dos tablas reacionadas
+create view Book_and_Autor as
+select concat(lib.titulo,' - ',lib.editorial,' - ',cat.nombre) as Book_detail,
+        concat(aut.nombre,' - ',aut.nacionalidad) as Autor_Detail
+from libro as lib
+inner join autor as aut on lib.autor_id = aut.id
+inner join libro_categoria as lc on lib.id = lc.libro_id
+inner join categoria as cat on lc.categoria_id = cat.id;
+
+# de acuerdo a la vista creada generar lo siguiente
+# si el book_detail este la editorial "nova"
+# generar una columna que diga "en venta"
+# caso contrario colocar en "proceso"
+
+
+#categoria libro  autor categoria libro
+
+select cat.nombre as category,
+         a.nombre as autor,
+        a.nacionalidad as nacionalidad
+from libro as lib
+inner join autor as a on lib.autor_id = a.id
+inner join libro_categoria as lc on lib.id = lc.libro_id
+inner join categoria as  cat on lc.categoria_id = cat.id
+where cat.nombre = 'Historia' and a.nacionalidad = 'Peruano';
+# funcion que retorna mi nombre
+create or replace function fullname()
+    returns varchar(30)
+    begin
+        return 'Saul Escobar Serrano';
+    end;
+ select fullname();
+
+create function numero()
+returns int
+begin
+    return 10;
+end;
+select numero();
+    #crear una funcion que reciba un parametro de tipo cadena
+create or replace function getNombreCompleto(nombres varchar(30))
+returns varchar (30)
+begin
+    return nombres;
+end;
+select getNombreCompleto('Saul Escobar Serrano');
+
+# crear una funcion que sume tres numero  la funcion recibe 3 parametros entereos
+ create or replace function suma_de_tres_num(num1 int,num2 int,num3 int)
+returns int
+begin
+    declare result int;
+    set result = num1 + num2+num3;
+    return result;
+end;
+select suma_de_tres_num(5,4,6);
+
+ create or replace function suma_de_tres_num_v1(num1 int,num2 int,num3 int)
+returns int
+begin
+
+    return num1 + num2+num3;
+end;
+select suma_de_tres_num_v1(5,6,7);
+
+# crear una funcion de nombre calculadora
+# la funcion recie 3 parametros
+# dos int y un varchar
+# si el 3 parametro es suma = retornar la suma de los 2 primeros numeros
+# si el 3 parametro es resta = retornar la resta de los 2 primeros numeros
+# si el 3 parametro es multiplicacion = retornar la multiplicacion de los 2 primeros numeros
+# si el 3 parametro es division = retornar la division de los 2 primeros numeros
+create  function calculadora(a int ,b int ,accion varchar(30))
+returns int
+begin
+
+    if  accion = 'suma' then
+        	return   a + b;
+		if accion ='resta'
+			return a - b;
+		IF accion= 'multiplicacion'
+			return  a * b;
+		IF accion = 'division'
+			return  a/ b;
+			RETURN 1;
+end;
+select calculadora(5,6,'suma');
+select calculadora(8,9,'multiplicaion');
+
+
+create function calcuadora_v1(a int , b int, tipo varchar(30))
+returns int
+begin
+    declare resp int default 0;
+    case tipo
+        when 'suma' then set resp = a + b;
+         when 'resta' then set resp = a - b;
+          when 'multiplicacion' then set resp = a * b;
+           when 'division' then set resp = a / b;
+        else set resp = 0;
+        end case;
+    return resp;
+end;
+select calcuadora_v1(5,9,'suma');
+
+create function valida_Historia_Peru(cat varchar(30),nac varchar (30))
+    returns bool
+    begin
+        declare resp bool default  false;
+        if cat = 'Historia' and nac = 'Peruano' then
+            set resp = true;
+        end if;
+        return resp;
+    end;
+
+
+select cat.nombre as category,
+         a.nombre as autor,
+        a.nacionalidad as nacionalidad
+from libro as lib
+inner join autor as a on lib.autor_id = a.id
+inner join libro_categoria as lc on lib.id = lc.libro_id
+inner join categoria as  cat on lc.categoria_id = cat.id
+where valida_Historia_Peru(cat.nombre,a.nacionalidad);
+
+
